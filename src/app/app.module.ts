@@ -3,12 +3,15 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 
+import { ErrorsModule } from './core/errors/errors.module';
+
 @NgModule({
   declarations: [
     AppComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    ErrorsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
