@@ -1,5 +1,5 @@
 import { Injectable, ErrorHandler } from '@angular/core';
-import axios, { AxiosInstance, AxiosError } from 'axios';
+import axios, { AxiosInstance, AxiosError, AxiosResponse } from 'axios';
 import { HttpErrorResponse } from '@angular/common/http';
 
 export interface Params {
@@ -29,20 +29,20 @@ export class HttpClientService {
     this.axiosClient = axios.create({
       timeout: 3000
     });
+
+    this.axiosClient.interceptors.response.use((response: AxiosResponse) => response, (error: AxiosError) => {
+      return Promise.reject(this.normalizeError(error));
+    });
   }
 
   public async get<T>(options: GetOptions): Promise<T> {
-    try {
-      const axiosReponse = await this.axiosClient.request<T>({
-        method: 'get',
-        url: options.url,
-        params: options.params
-      });
+    const { data } = await this.axiosClient.request<T>({
+      method: 'get',
+      url: options.url,
+      params: options.params
+    });
 
-      return axiosReponse.data;
-    } catch (error) {
-      return Promise.reject(this.normalizeError(error));
-    }
+    return data;
   }
 
   private normalizeError(error: AxiosError): AxiosError {
